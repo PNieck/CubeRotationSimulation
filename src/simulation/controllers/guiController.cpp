@@ -6,7 +6,8 @@
 #include <misc/cpp/imgui_stdlib.h>
 
 
-GuiController::GuiController(GLFWwindow *window)
+GuiController::GuiController(GLFWwindow *window):
+    visualization(500, 600)
 {
     const auto glsl_version = "#version 410";
     IMGUI_CHECKVERSION();
@@ -35,17 +36,14 @@ GuiController::~GuiController()
 
 void GuiController::Render() const
 {
-    //glClear(GL_COLOR_BUFFER_BIT);
-
     // Creating new frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-
     dockingSpace.Render();
     optionsPanel.Render();
-
+    visualization.Render();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

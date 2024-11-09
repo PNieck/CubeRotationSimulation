@@ -5,6 +5,7 @@
 
 #include "../views/dockingSpace.hpp"
 #include "../views/optionsPanel.hpp"
+#include "../views/visualization.hpp"
 
 
 class GuiController {
@@ -17,4 +18,5 @@ public:
 private:
     DockingSpace dockingSpace;
     OptionsPanel optionsPanel;
+    Visualization visualization;
 };
