@@ -22,6 +22,11 @@ private:
     GLFWwindow* window;
     MainController controller;
 
+    static void SizeChangedCallback(GLFWwindow* window, int width, int height);
+    static void MouseMoveCallback(GLFWwindow* window, double xpos, double ypos);
+    static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+    static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+
     static GLFWwindow* CreateGFLWwindow(int width, int height, const std::string &name);
 
     static void InitializeGLFW();

@@ -9,6 +9,9 @@ unsigned int Window::instances_cnt = 0;
 Window::Window(int width, int height, const std::string & name):
     window(CreateGFLWwindow(width, height, name)), controller(window)
 {
+    // Set window pointer to this class for all callback
+    glfwSetWindowUserPointer(window, this);
+
     // Enable "vsync"
     glfwSwapInterval(1);
 }
@@ -39,6 +42,12 @@ GLFWwindow * Window::CreateGFLWwindow(int width, int height, const std::string &
 
     glfwMakeContextCurrent(window);
     InitializeGlad();
+
+    // Set callbacks
+    glfwSetFramebufferSizeCallback(window, SizeChangedCallback);
+    glfwSetCursorPosCallback(window, MouseMoveCallback);
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);
+    glfwSetScrollCallback(window, ScrollCallback);
 
     instances_cnt++;
 
@@ -84,4 +93,68 @@ void Window::RunMessageLoop() const
 
         glfwSwapBuffers(window);
     }
+}
+
+
+void Window::SizeChangedCallback(GLFWwindow *glfwWindow, const int width, const int height)
+{
+    auto* window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+    window->controller.SizeChanged(width, height);
+}
+
+
+void Window::MouseMoveCallback(GLFWwindow *glfwWindow, const double xpos, const double ypos)
+{
+    auto* window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+    window->controller.MouseMoved(static_cast<int>(xpos), static_cast<int>(ypos));
+}
+
+
+void Window::MouseButtonCallback(GLFWwindow *glfwWindow, int button, int action, int mods)
+{
+    (void)mods;
+
+    auto* window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+
+    MouseButton mouseButton;
+
+    switch (button) {
+        case GLFW_MOUSE_BUTTON_LEFT:
+            mouseButton = MouseButton::Left;
+        break;
+
+        case GLFW_MOUSE_BUTTON_MIDDLE:
+            mouseButton = MouseButton::Middle;
+        break;
+
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            mouseButton = MouseButton::Right;
+        break;
+
+        default:
+            return;
+    }
+
+    switch (action)
+    {
+        case GLFW_PRESS:
+            window->controller.MouseClicked(mouseButton);
+        break;
+
+        case GLFW_RELEASE:
+            window->controller.MouseReleased(mouseButton);
+        break;
+
+        default:
+            break;
+    }
+}
+
+
+void Window::ScrollCallback(GLFWwindow *glfwWindow, double xoffset, double yoffset)
+{
+    (void)xoffset;
+
+    Window* window = (Window*)glfwGetWindowUserPointer(glfwWindow);
+    window->controller.ScrollMoved((int)yoffset);
 }

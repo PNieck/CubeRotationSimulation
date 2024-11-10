@@ -9,6 +9,7 @@ class Framebuffer {
 public:
     Framebuffer(int width, int height);
     Framebuffer(Framebuffer&) = delete;
+    Framebuffer(const Framebuffer&) = delete;
 
     ~Framebuffer();
 
