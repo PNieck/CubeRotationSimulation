@@ -2,6 +2,8 @@
 
 #include "imgui_internal.h"
 
+#include "simulation/views/visualization.hpp"
+
 
 DockingSpace::DockingSpace()
 {
@@ -47,7 +49,6 @@ void DockingSpace::Render() const
 
             const auto rightDockId = ImGui::DockBuilderSplitNode(DockSpaceId, ImGuiDir_Right, 0.25f, nullptr, &DockSpaceId);
             ImGui::DockBuilderDockWindow("Options", rightDockId);
-            ImGui::DockBuilderDockWindow("Dear ImGui Demo", DockSpaceId);
             ImGui::DockBuilderFinish(DockSpaceId);
         }
     }

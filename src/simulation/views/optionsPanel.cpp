@@ -13,6 +13,4 @@ void OptionsPanel::Render() const {
     ImGui::Button("Test");
 
     ImGui::End();
-
-    ImGui::ShowDemoWindow();
 }
