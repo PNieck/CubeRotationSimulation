@@ -1,23 +1,14 @@
 #pragma once
 
-#include <numbers>
-
-#include "visualization/framebuffer.hpp"
 #include "visualization/camera.hpp"
 #include "visualization/grid.hpp"
+#include "visualization/renderObject.hpp"
+#include "visualization/shaders/stdShader.hpp"
+
 
 class Visualization {
 public:
-    Visualization(const int xResolution, const int yResolution):
-        camera({
-            .target = glm::vec3(0.f),
-            .viewportWidth = xResolution,
-            .viewportHeight = yResolution,
-            .fov = std::numbers::pi_v<float> / 4.f,
-            .nearPlane = 0.1f,
-            .farPlane = 100.0f,
-        })
-    {}
+    Visualization(int xResolution, int yResolution);
 
     void Render() const;
 
@@ -37,6 +28,12 @@ public:
         { return "Visualization"; }
 
 private:
+
     Camera camera;
     Grid grid;
+    RenderObject cube;
+    RenderObject plane;
+    RenderObject diagonal;
+
+    StdShader shader;
 };
