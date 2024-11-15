@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mesh.hpp"
+#include "indexedMesh.hpp"
 #include "glm/mat4x4.hpp"
 #include "glm/vec4.hpp"
 
@@ -36,7 +36,7 @@ public:
         { return mesh.GetElementsCnt(); }
 
 private:
-    Mesh mesh;
+    IndexedMesh mesh;
     glm::vec4 color;
     glm::vec3 scale;
     glm::vec3 translation;

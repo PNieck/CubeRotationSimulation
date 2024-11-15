@@ -4,6 +4,7 @@
 #include "visualization/grid.hpp"
 #include "visualization/renderObject.hpp"
 #include "visualization/shaders/stdShader.hpp"
+#include "visualization/mesh.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -43,13 +44,14 @@ private:
 
     glm::mat4 initCubeRotation;
 
-    int traceLen = 5000;
+    int maxTraceLen = 5000;
     std::vector<float> traceVertices;
-    std::vector<uint32_t> traceIndices;
+    Mesh traceMesh;
 
     StdShader shader;
 
     bool renderCube = true;
     bool renderDiagonal = true;
     bool renderPlane = true;
+    bool renderTrace = true;
 };

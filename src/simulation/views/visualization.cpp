@@ -67,8 +67,7 @@ Visualization::Visualization(const int xResolution, const int yResolution):
 
     diagonal.UpdateMesh(diagonalVertices, {0,1});
 
-    traceVertices.reserve(traceLen * 3);
-    traceIndices.reserve(traceLen);
+    traceVertices.reserve(maxTraceLen * 3);
 }
 
 
@@ -79,7 +78,19 @@ void Visualization::Update(const glm::quat& q)
     cube.SetRotation(rotMat);
     diagonal.SetRotation(rotMat);
 
+    const auto diagonalEnd = rotMat * glm::vec4(1.f, 1.f, 1.f, 1.f);
+    if (traceVertices.size() == maxTraceLen*3) {
+        const auto firstElem = traceVertices.begin();
+        const auto thirdElem = traceVertices.begin() + 3;
 
+        traceVertices.erase(firstElem, thirdElem);
+    }
+
+    traceVertices.push_back(diagonalEnd.x);
+    traceVertices.push_back(diagonalEnd.y);
+    traceVertices.push_back(diagonalEnd.z);
+
+    traceMesh.Update(traceVertices);
 }
 
 
@@ -116,6 +127,13 @@ void Visualization::Render() const
         diagonal.UseMesh();
         glDrawElements(GL_LINES, diagonal.MeshElements(), GL_UNSIGNED_INT, 0);
     }
+
+    if (renderTrace) {
+        shader.SetColor(glm::vec4(1.f));
+        shader.SetMVP(cameraMtx);
+        traceMesh.Use();
+        glDrawArrays( GL_LINE_STRIP, 0, traceMesh.GetElementsCnt());
+    }
 }
 
 
@@ -126,6 +144,7 @@ void Visualization::RenderOptions()
     ImGui::Checkbox("Render cube", &renderCube);
     ImGui::Checkbox("Render diagonal", &renderDiagonal);
     ImGui::Checkbox("Render plane", &renderPlane);
+    ImGui::Checkbox("Render trace", &renderTrace);
 
     ImGui::End();
 }
@@ -138,7 +157,7 @@ void Visualization::ResizeWindow(const int width, const int height)
 }
 
 
-void Visualization::RotateCamera(float x, float y)
+void Visualization::RotateCamera(const float x, const float y)
 {
     const auto oldPos = camera.GetPosition();
 

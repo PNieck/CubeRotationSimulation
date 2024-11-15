@@ -10,5 +10,5 @@ public:
     float deltaT = 0.001;
     bool gravity = true;
     float angle = glm::radians(5.f);
-    float angularVelocity = 15.f;
+    float angularVelocity = 32.f;
 };
