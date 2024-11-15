@@ -2,6 +2,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "imgui.h"
+
 
 Visualization::Visualization(const int xResolution, const int yResolution):
     camera({
@@ -11,7 +13,10 @@ Visualization::Visualization(const int xResolution, const int yResolution):
         .fov = std::numbers::pi_v<float> / 4.f,
         .nearPlane = 0.1f,
         .farPlane = 100.0f,
-    })
+    }),
+    initCubeRotation(
+        toMat4(rotation(glm::normalize(glm::vec3(1.f, 1.f, 1.f)), glm::vec3(0.f, 1.f, 0.f)))
+    )
 {
     const std::vector<float> planeVertices = {
          1.f, 0.f,  1.f,
@@ -28,14 +33,14 @@ Visualization::Visualization(const int xResolution, const int yResolution):
     plane.UpdateMesh(planeVertices, planeIndices);
 
     const std::vector<float> cubeVertices = {
-         0.5f,  0.5f,  0.5f,    // Vertex 0
-         0.5f, -0.5f,  0.5f,    // Vertex 1
-         0.5f, -0.5f, -0.5f,    // Vertex 2
-         0.5f,  0.5f, -0.5f,    // Vertex 3
-        -0.5f,  0.5f,  0.5f,    // Vertex 4
-        -0.5f, -0.5f,  0.5f,    // Vertex 5
-        -0.5f, -0.5f, -0.5f,    // Vertex 6
-        -0.5f,  0.5f, -0.5f     // Vertex 7
+        1.f, 1.f, 1.f,    // Vertex 0
+        1.f, 0.f, 1.f,    // Vertex 1
+        1.f, 0.f, 0.f,    // Vertex 2
+        1.f, 1.f, 0.f,    // Vertex 3
+        0.f, 1.f, 1.f,    // Vertex 4
+        0.f, 0.f, 1.f,    // Vertex 5
+        0.f, 0.f, 0.f,    // Vertex 6
+        0.f, 1.f, 0.f     // Vertex 7
     };
 
     const std::vector<uint32_t> cubeIndices = {
@@ -53,24 +58,30 @@ Visualization::Visualization(const int xResolution, const int yResolution):
         6, 1, 2
     };
 
-    const auto cubePos = glm::vec3(0.f, std::sqrt(3.f)/2.f, 0.f);
     cube.UpdateMesh(cubeVertices, cubeIndices);
-    cube.SetPosition(cubePos);
-
-    const auto cubeRotation = glm::rotate(glm::mat4(1.f), glm::radians(45.f), glm::vec3(0.f, 1.f, 0.f));
-    const auto cubeRotation2 = glm::rotate(glm::mat4(1.f), glm::radians(90.f - 35.264f), normalize(glm::vec3(0.f, 0.f, 1.f)));
-
-    cube.SetRotation(cubeRotation2 * cubeRotation);
 
     const std::vector<float> diagonalVertices = {
-         0.5f,  0.5f,  0.5f,    // Vertex 0
-        -0.5f, -0.5f, -0.5f,
+        1.f, 1.f, 1.f,    // Vertex 0
+        0.f, 0.f, 0.f,    // Vertex 1
     };
 
     diagonal.UpdateMesh(diagonalVertices, {0,1});
-    diagonal.SetRotation(cubeRotation2 * cubeRotation);
-    diagonal.SetPosition(cubePos);
+
+    traceVertices.reserve(traceLen * 3);
+    traceIndices.reserve(traceLen);
 }
+
+
+void Visualization::Update(const glm::quat& q)
+{
+    const auto rotMat = glm::toMat4(q) * initCubeRotation;
+
+    cube.SetRotation(rotMat);
+    diagonal.SetRotation(rotMat);
+
+
+}
+
 
 void Visualization::Render() const
 {
@@ -98,6 +109,14 @@ void Visualization::Render() const
     shader.SetMVP(cameraMtx * diagonal.ModelMatrix());
     diagonal.UseMesh();
     glDrawElements(GL_LINES, diagonal.MeshElements(), GL_UNSIGNED_INT, 0);
+}
+
+
+void Visualization::RenderOptions() const
+{
+    ImGui::Begin(WindowName());
+
+    ImGui::End();
 }
 
 

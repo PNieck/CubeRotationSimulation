@@ -9,13 +9,30 @@
 #include "../views/optionsPanel.hpp"
 #include "../views/visualization.hpp"
 
+#include "../model/model.hpp"
+
 
 class MainController {
 public:
     explicit MainController(GLFWwindow* window);
     ~MainController();
 
-    void Render() const;
+    void Update();
+
+    void StartSimulation()
+        { model.StartSimulation(); }
+
+    void StopSimulation()
+        { model.StopSimulation(); }
+
+    void UpdateSimulation()
+        { model.UpdateSimulation(); }
+
+    [[nodiscard]]
+    bool SimulationIsRunning() const
+        { return model.SimulationRunning(); }
+
+    void Render();
 
     void SizeChanged(const int width, const int height)
         { visualization.ResizeWindow(width, height); }
@@ -35,4 +52,6 @@ private:
     DockingSpace dockingSpace;
     OptionsPanel optionsPanel;
     Visualization visualization;
+
+    Model model;
 };

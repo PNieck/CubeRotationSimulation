@@ -14,7 +14,7 @@ public:
     Window(int width, int height, const std::string &name);
     ~Window();
 
-    void RunMessageLoop() const;
+    void RunMessageLoop();
 
 private:
     static unsigned int instances_cnt;
