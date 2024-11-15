@@ -146,6 +146,14 @@ void Visualization::RenderOptions()
     ImGui::Checkbox("Render plane", &renderPlane);
     ImGui::Checkbox("Render trace", &renderTrace);
 
+    const int oldMaxTraceLen = maxTraceLen;
+    if (ImGui::InputInt("Trace length",&maxTraceLen)) {
+        if (oldMaxTraceLen > maxTraceLen)
+            traceVertices.erase(traceVertices.begin() + maxTraceLen*3, traceVertices.end());
+        else
+            traceVertices.reserve(maxTraceLen*3);
+    }
+
     ImGui::End();
 }
 
