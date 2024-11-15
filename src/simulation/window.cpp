@@ -84,11 +84,12 @@ void Window::InitializeGlad()
 }
 
 
-void Window::RunMessageLoop() const
+void Window::RunMessageLoop()
 {
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
+        controller.Update();
         controller.Render();
 
         glfwSwapBuffers(window);
@@ -155,6 +156,6 @@ void Window::ScrollCallback(GLFWwindow *glfwWindow, double xoffset, double yoffs
 {
     (void)xoffset;
 
-    Window* window = (Window*)glfwGetWindowUserPointer(glfwWindow);
-    window->controller.ScrollMoved((int)yoffset);
+    auto* window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+    window->controller.ScrollMoved(static_cast<int>(yoffset));
 }

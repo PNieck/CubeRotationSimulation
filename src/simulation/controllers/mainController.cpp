@@ -6,7 +6,7 @@
 
 
 MainController::MainController(GLFWwindow *window):
-    visualization(500, 600)
+    optionsPanel(*this), visualization(500, 600)
 {
     const auto glsl_version = "#version 410";
     IMGUI_CHECKVERSION();
@@ -33,7 +33,14 @@ MainController::~MainController()
 }
 
 
-void MainController::Render() const
+void MainController::Update()
+{
+    const auto q = model.GetCubeRotation();
+    visualization.Update(q);
+}
+
+
+void MainController::Render()
 {
     // Creating new frame
     ImGui_ImplOpenGL3_NewFrame();
