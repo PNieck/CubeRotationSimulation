@@ -47,8 +47,10 @@ void DockingSpace::Render() const
             ImGui::DockBuilderAddNode(DockSpaceId, dockNodeFlags | ImGuiDockNodeFlags_DockSpace);
             ImGui::DockBuilderSetNodeSize(DockSpaceId, viewport->Size);
 
-            const auto rightDockId = ImGui::DockBuilderSplitNode(DockSpaceId, ImGuiDir_Right, 0.25f, nullptr, &DockSpaceId);
+            auto rightDockId = ImGui::DockBuilderSplitNode(DockSpaceId, ImGuiDir_Right, 0.25f, nullptr, &DockSpaceId);
+            const auto rightDownDockId = ImGui::DockBuilderSplitNode(rightDockId, ImGuiDir_Down, 0.75f, nullptr, &rightDockId);
             ImGui::DockBuilderDockWindow("Options", rightDockId);
+            ImGui::DockBuilderDockWindow(Visualization::WindowName(), rightDownDockId);
             ImGui::DockBuilderFinish(DockSpaceId);
         }
     }

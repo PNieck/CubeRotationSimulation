@@ -16,7 +16,7 @@ public:
     void Update(const glm::quat& q);
 
     void Render() const;
-    void RenderOptions() const;
+    void RenderOptions();
 
     void ResizeWindow(int width, int height);
 
@@ -48,4 +48,8 @@ private:
     std::vector<uint32_t> traceIndices;
 
     StdShader shader;
+
+    bool renderCube = true;
+    bool renderDiagonal = true;
+    bool renderPlane = true;
 };

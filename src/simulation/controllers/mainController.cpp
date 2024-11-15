@@ -50,6 +50,7 @@ void MainController::Render()
     dockingSpace.Render();
     optionsPanel.Render();
     visualization.Render();
+    visualization.RenderOptions();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

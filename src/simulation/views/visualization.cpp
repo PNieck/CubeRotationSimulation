@@ -95,26 +95,37 @@ void Visualization::Render() const
     grid.Render(view, projection);
 
     shader.Use();
-    shader.SetColor(glm::vec4(0.5f));
-    shader.SetMVP(cameraMtx * plane.ModelMatrix());
-    plane.UseMesh();
-    glDrawElements(GL_TRIANGLES, plane.MeshElements(), GL_UNSIGNED_INT, 0);
 
-    shader.SetColor(glm::vec4(0.133, 0.592, 0.82, 0.5));
-    shader.SetMVP(cameraMtx * cube.ModelMatrix());
-    cube.UseMesh();
-    glDrawElements(GL_TRIANGLES, cube.MeshElements(), GL_UNSIGNED_INT, 0);
+    if (renderPlane) {
+        shader.SetColor(glm::vec4(0.5f));
+        shader.SetMVP(cameraMtx * plane.ModelMatrix());
+        plane.UseMesh();
+        glDrawElements(GL_TRIANGLES, plane.MeshElements(), GL_UNSIGNED_INT, 0);
+    }
 
-    shader.SetColor(glm::vec4(0.91, 0.902, 0.106, 1.f));
-    shader.SetMVP(cameraMtx * diagonal.ModelMatrix());
-    diagonal.UseMesh();
-    glDrawElements(GL_LINES, diagonal.MeshElements(), GL_UNSIGNED_INT, 0);
+    if (renderCube) {
+        shader.SetColor(glm::vec4(0.133, 0.592, 0.82, 0.5));
+        shader.SetMVP(cameraMtx * cube.ModelMatrix());
+        cube.UseMesh();
+        glDrawElements(GL_TRIANGLES, cube.MeshElements(), GL_UNSIGNED_INT, 0);
+    }
+
+    if (renderDiagonal) {
+        shader.SetColor(glm::vec4(0.91, 0.902, 0.106, 1.f));
+        shader.SetMVP(cameraMtx * diagonal.ModelMatrix());
+        diagonal.UseMesh();
+        glDrawElements(GL_LINES, diagonal.MeshElements(), GL_UNSIGNED_INT, 0);
+    }
 }
 
 
-void Visualization::RenderOptions() const
+void Visualization::RenderOptions()
 {
     ImGui::Begin(WindowName());
+
+    ImGui::Checkbox("Render cube", &renderCube);
+    ImGui::Checkbox("Render diagonal", &renderDiagonal);
+    ImGui::Checkbox("Render plane", &renderPlane);
 
     ImGui::End();
 }
