@@ -35,6 +35,7 @@ public:
     void UseMesh() const
         { mesh.Use(); }
 
+    [[nodiscard]]
     int MeshElements() const
         { return mesh.GetElementsCnt(); }
 

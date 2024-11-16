@@ -78,7 +78,7 @@ void Visualization::Update(const glm::quat& q)
     cube.SetRotation(rotMat);
     diagonal.SetRotation(rotMat);
 
-    const auto diagonalEnd = rotMat * glm::vec4(1.f, 1.f, 1.f, 1.f);
+    const auto diagonalEnd = diagonal.ModelMatrix() * glm::vec4(1.f, 1.f, 1.f, 1.f);
     if (traceVertices.size() == maxTraceLen*3) {
         const auto firstElem = traceVertices.begin();
         const auto thirdElem = traceVertices.begin() + 3;
