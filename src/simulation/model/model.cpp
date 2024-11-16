@@ -16,6 +16,7 @@ void Model::SetProperties(const SimulationProperties &properties)
         StopSimulation();
 
     simulation.SetProperties(properties);
+    timedLoop.ChangePeriod(static_cast<int>(properties.deltaT* 1000.f));
 
     if (simulationRuns)
         StartSimulation();
