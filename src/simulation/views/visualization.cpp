@@ -67,6 +67,23 @@ Visualization::Visualization(const int xResolution, const int yResolution):
 
     diagonal.UpdateMesh(diagonalVertices, {0,1});
 
+    const std::vector<float> vectorVertices = {
+         0.f,   0.f, 0.f,    // Vertex 0
+         1.f,   0.f, 0.f,    // Vertex 1
+        0.8f,  0.2f, 0.f,    // Vector 2
+        0.8f, -0.2f, 0.f     // Vector 3
+    };
+
+    const std::vector<uint32_t> vectorIndices {
+        0, 1, 2, 1, 3
+    };
+
+    gravityVector.UpdateMesh(vectorVertices, vectorIndices);
+    gravityVector.SetRotation(
+        toMat4(rotation(glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f, -1.f, 0.f)))
+    );
+    gravityVector.SetScale(glm::vec3(0.981f, 0.981f, 0.981f));
+
     traceVertices.reserve(maxTraceLen * 3);
 }
 
@@ -78,7 +95,9 @@ void Visualization::Update(const glm::quat& q)
     cube.SetRotation(rotMat);
     diagonal.SetRotation(rotMat);
 
-    const auto diagonalEnd = diagonal.ModelMatrix() * glm::vec4(1.f, 1.f, 1.f, 1.f);
+    const auto diagMat = diagonal.ModelMatrix();
+
+    const auto diagonalEnd = diagMat * glm::vec4(1.f, 1.f, 1.f, 1.f);
     if (traceVertices.size() == maxTraceLen*3) {
         const auto firstElem = traceVertices.begin();
         const auto thirdElem = traceVertices.begin() + 3;
@@ -91,6 +110,8 @@ void Visualization::Update(const glm::quat& q)
     traceVertices.push_back(diagonalEnd.z);
 
     traceMesh.Update(traceVertices);
+
+    gravityVector.SetPosition(diagMat * glm::vec4(0.5f, 0.5f, 0.5f, 0.5f));
 }
 
 
@@ -111,28 +132,35 @@ void Visualization::Render() const
         shader.SetColor(glm::vec4(0.5f));
         shader.SetMVP(cameraMtx * plane.ModelMatrix());
         plane.UseMesh();
-        glDrawElements(GL_TRIANGLES, plane.MeshElements(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, plane.MeshElements(), GL_UNSIGNED_INT, nullptr);
     }
 
     if (renderCube) {
         shader.SetColor(glm::vec4(0.133, 0.592, 0.82, 0.5));
         shader.SetMVP(cameraMtx * cube.ModelMatrix());
         cube.UseMesh();
-        glDrawElements(GL_TRIANGLES, cube.MeshElements(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, cube.MeshElements(), GL_UNSIGNED_INT, nullptr);
     }
 
     if (renderDiagonal) {
         shader.SetColor(glm::vec4(0.91, 0.902, 0.106, 1.f));
         shader.SetMVP(cameraMtx * diagonal.ModelMatrix());
         diagonal.UseMesh();
-        glDrawElements(GL_LINES, diagonal.MeshElements(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_LINES, diagonal.MeshElements(), GL_UNSIGNED_INT, nullptr);
     }
 
     if (renderTrace) {
         shader.SetColor(glm::vec4(1.f));
         shader.SetMVP(cameraMtx);
         traceMesh.Use();
-        glDrawArrays( GL_LINE_STRIP, 0, traceMesh.GetElementsCnt());
+        glDrawArrays(GL_LINE_STRIP, 0, traceMesh.GetElementsCnt());
+    }
+
+    if (renderGravityVector) {
+        shader.SetColor(glm::vec4(1.f));
+        shader.SetMVP(cameraMtx * gravityVector.ModelMatrix());
+        gravityVector.UseMesh();
+        glDrawElements(GL_LINE_STRIP, gravityVector.MeshElements(), GL_UNSIGNED_INT, nullptr);
     }
 }
 
@@ -145,6 +173,7 @@ void Visualization::RenderOptions()
     ImGui::Checkbox("Render diagonal", &renderDiagonal);
     ImGui::Checkbox("Render plane", &renderPlane);
     ImGui::Checkbox("Render trace", &renderTrace);
+    ImGui::Checkbox("Render gravity vector", &renderGravityVector);
 
     const int oldMaxTraceLen = maxTraceLen;
     if (ImGui::InputInt("Trace length",&maxTraceLen)) {
@@ -153,6 +182,9 @@ void Visualization::RenderOptions()
         else
             traceVertices.reserve(maxTraceLen*3);
     }
+
+    if (ImGui::Button("Reset trace"))
+        ResetTrace();
 
     ImGui::End();
 }

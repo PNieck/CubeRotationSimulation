@@ -46,6 +46,7 @@ private:
     RenderObject plane;
     RenderObject diagonal;
     RenderObject trace;
+    RenderObject gravityVector;
 
     glm::mat4 initCubeRotation;
 
@@ -59,4 +60,5 @@ private:
     bool renderDiagonal = true;
     bool renderPlane = true;
     bool renderTrace = true;
+    bool renderGravityVector = false;
 };

@@ -4,11 +4,6 @@
 
 
 Simulation::Simulation(const SimulationProperties &properties)
-    // properties(properties),
-    // I(CubeInertiaTensor()),
-    // invI(inverse(I)),
-    // W(0.f, properties.angularVelocity, 0.f),
-    // Q(InitRotationQuaternion())
 {
     SetProperties(properties);
 }
@@ -22,7 +17,6 @@ void Simulation::Update()
 
     auto kW1 = CalculateDiffW(W, N);
     auto kQ1 = CalculateDiffQ(W, Q);
-
 
     auto W2 = W + kW1*properties.deltaT/2.f;
     auto Q2 = glm::normalize(Q + kQ1*properties.deltaT/2.f);

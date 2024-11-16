@@ -24,7 +24,7 @@ void OptionsPanel::Render()
 }
 
 
-void OptionsPanel::RenderStartStopButton(const bool simRuns) const
+void OptionsPanel::RenderStartStopButton(const bool simRuns)
 {
     ImGui::BeginDisabled(simRuns);
     if (ImGui::Button("Start")) {
@@ -43,6 +43,10 @@ void OptionsPanel::RenderStartStopButton(const bool simRuns) const
     ImGui::BeginDisabled(simRuns);
     if (ImGui::Button("Update")) {
         controller.UpdateSimulation();
+    }
+
+    if (ImGui::Button("Reset")) {
+        controller.SetProperties(properties);
     }
     ImGui::EndDisabled();
 }
@@ -65,6 +69,7 @@ void OptionsPanel::RenderProperties(const bool simRuns)
 
     optionsChanged |= ImGui::InputFloat("Rotation velocity", &properties.angularVelocity);
     optionsChanged |= ImGui::InputFloat("Integration step", &properties.deltaT);
+    optionsChanged |= ImGui::Checkbox("Gravity", &properties.gravity);
 
     ImGui::EndDisabled();
 

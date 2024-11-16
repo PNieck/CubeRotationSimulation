@@ -15,6 +15,6 @@ private:
 
     SimulationProperties properties;
 
-    void RenderStartStopButton(bool simRuns) const;
+    void RenderStartStopButton(bool simRuns);
     void RenderProperties(bool simRuns);
 };
