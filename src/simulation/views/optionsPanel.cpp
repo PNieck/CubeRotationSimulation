@@ -2,18 +2,30 @@
 
 #include <imgui.h>
 
-#include "imgui_internal.h"
 #include "simulation/controllers/mainController.hpp"
 
 
-void OptionsPanel::Render() const
+OptionsPanel::OptionsPanel(MainController &controller):
+    controller(controller)
 {
-    ImGui::DockBuilderAddNode();
+}
 
+
+void OptionsPanel::Render()
+{
     ImGui::Begin("Options");
 
     const bool simRuns = controller.SimulationIsRunning();
 
+    RenderStartStopButton(simRuns);
+    RenderProperties(simRuns);
+
+    ImGui::End();
+}
+
+
+void OptionsPanel::RenderStartStopButton(const bool simRuns) const
+{
     ImGui::BeginDisabled(simRuns);
     if (ImGui::Button("Start")) {
         controller.StartSimulation();
@@ -33,6 +45,29 @@ void OptionsPanel::Render() const
         controller.UpdateSimulation();
     }
     ImGui::EndDisabled();
+}
 
-    ImGui::End();
+
+void OptionsPanel::RenderProperties(const bool simRuns)
+{
+    bool optionsChanged = false;
+
+    ImGui::BeginDisabled(simRuns);
+
+    optionsChanged |= ImGui::InputFloat("Cube edge length", &properties.cubeEdgeLen);
+    optionsChanged |= ImGui::InputFloat("Cube density", &properties.cubeDensity);
+
+    float tilt = glm::degrees(properties.angle);
+    if (ImGui::InputFloat("Cube tilt", &tilt)) {
+        properties.angle = glm::radians(tilt);
+        optionsChanged = true;
+    }
+
+    optionsChanged |= ImGui::InputFloat("Rotation velocity", &properties.angularVelocity);
+    optionsChanged |= ImGui::InputFloat("Integration step", &properties.deltaT);
+
+    ImGui::EndDisabled();
+
+    if (optionsChanged)
+        controller.SetProperties(properties);
 }

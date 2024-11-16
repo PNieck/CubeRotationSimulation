@@ -184,3 +184,10 @@ void Visualization::RotateCamera(const float x, const float y)
     const auto newPos = rotation * glm::vec4(oldPos, 1.f);
     camera.SetPosition(glm::vec3(newPos.x, newPos.y, newPos.z));
 }
+
+void Visualization::SetCubeEdgeLen(const float edge)
+{
+    const auto newScale = glm::vec3(edge, edge, edge);
+    cube.SetScale(newScale);
+    diagonal.SetScale(newScale);
+}

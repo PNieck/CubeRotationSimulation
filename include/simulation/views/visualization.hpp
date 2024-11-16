@@ -30,6 +30,8 @@ public:
     void SetCameraPosition(const glm::vec3& position)
         { camera.SetPosition(position); }
 
+    void SetCubeEdgeLen(float edge);
+
     [[nodiscard]]
     static const char* WindowName()
         { return "Visualization options"; }

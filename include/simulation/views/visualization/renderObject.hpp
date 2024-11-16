@@ -24,6 +24,9 @@ public:
     void SetColor(const glm::vec4& newColor)
         { color = newColor; }
 
+    void SetScale(const glm::vec3& scale)
+        { this->scale = scale; }
+
     void UpdateMesh(
         const std::vector<float>& vertices,
         const std::vector<uint32_t>& indices

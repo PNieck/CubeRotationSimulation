@@ -24,6 +24,8 @@ public:
     glm::quat GetCubeRotation()
         { return simulation.GetRotation(); }
 
+    void SetProperties(const SimulationProperties& properties);
+
 private:
     Simulation simulation;
     TimedLoop timedLoop;

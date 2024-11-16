@@ -1,15 +1,20 @@
 #pragma once
+#include "simulation/model/simulationProperties.hpp"
 
 class MainController;
 
 
 class OptionsPanel {
 public:
-    explicit OptionsPanel(MainController& controller):
-        controller(controller) {}
+    explicit OptionsPanel(MainController& controller);
 
-    void Render() const;
+    void Render();
 
 private:
     MainController& controller;
+
+    SimulationProperties properties;
+
+    void RenderStartStopButton(bool simRuns) const;
+    void RenderProperties(bool simRuns);
 };

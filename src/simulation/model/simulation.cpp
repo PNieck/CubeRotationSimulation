@@ -3,13 +3,14 @@
 #include <glm/gtx/string_cast.hpp>
 
 
-Simulation::Simulation(const SimulationProperties &properties):
-    properties(properties),
-    I(CubeInertiaTensor()),
-    invI(inverse(I)),
-    W(0.f, properties.angularVelocity, 0.f),
-    Q(InitRotationQuaternion())
+Simulation::Simulation(const SimulationProperties &properties)
+    // properties(properties),
+    // I(CubeInertiaTensor()),
+    // invI(inverse(I)),
+    // W(0.f, properties.angularVelocity, 0.f),
+    // Q(InitRotationQuaternion())
 {
+    SetProperties(properties);
 }
 
 
@@ -58,6 +59,19 @@ glm::quat Simulation::GetRotation()
 {
     std::lock_guard guard(rotationMutex);
     return Q;
+}
+
+
+void Simulation::SetProperties(const SimulationProperties &properties)
+{
+    std::lock_guard guard(rotationMutex);
+
+    this->properties = properties;
+
+    I = CubeInertiaTensor();
+    invI = glm::inverse(I);
+    W = glm::vec3(0.f, properties.angularVelocity, 0.f);
+    Q = InitRotationQuaternion();
 }
 
 

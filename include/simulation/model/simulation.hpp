@@ -17,6 +17,8 @@ public:
 
     glm::quat GetRotation();
 
+    void SetProperties(const SimulationProperties& properties);
+
 private:
     constexpr static float g = 9.81f;
 

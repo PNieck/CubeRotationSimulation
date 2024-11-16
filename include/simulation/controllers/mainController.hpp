@@ -28,6 +28,8 @@ public:
     void UpdateSimulation()
         { model.UpdateSimulation(); }
 
+    void SetProperties(const SimulationProperties& properties);
+
     [[nodiscard]]
     bool SimulationIsRunning() const
         { return model.SimulationRunning(); }
