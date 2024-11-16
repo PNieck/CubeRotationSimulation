@@ -44,6 +44,7 @@ void MainController::SetProperties(const SimulationProperties &properties)
 {
     model.SetProperties(properties);
     visualization.SetCubeEdgeLen(properties.cubeEdgeLen);
+    visualization.ResetTrace();
 }
 
 

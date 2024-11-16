@@ -32,6 +32,9 @@ public:
 
     void SetCubeEdgeLen(float edge);
 
+    void ResetTrace()
+        { traceVertices.clear(); }
+
     [[nodiscard]]
     static const char* WindowName()
         { return "Visualization options"; }
