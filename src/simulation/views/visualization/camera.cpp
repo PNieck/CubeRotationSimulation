@@ -33,8 +33,3 @@ glm::mat4 Camera::ProjectionMatrix() const
         parameters.farPlane
     );
 }
-
-
-void Camera::RotateAroundTarget(float x, float y)
-{
-}

@@ -201,14 +201,7 @@ void Visualization::RotateCamera(const float x, const float y)
 {
     const auto oldPos = camera.GetPosition();
 
-    auto rotation = glm::mat4(
-        1.f, 0.f, 0.f, 0.f,
-        0.f, 1.f, 0.f, 0.f,
-        0.f, 0.f, 1.f, 0.f,
-        0.f, 0.f, 0.f, 1.f
-    );
-
-    rotation = glm::rotate(rotation, x, glm::vec3(0.f, 1.f, 0.f));
+    auto rotation = glm::rotate(glm::mat4(1.f), x, glm::vec3(0.f, 1.f, 0.f));
 
     const auto axis = glm::cross(oldPos, glm::vec3(0.f, 1.f, 0.f));
     rotation = glm::rotate(rotation, y, axis);

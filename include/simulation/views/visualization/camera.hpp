@@ -39,8 +39,6 @@ public:
     void SetViewportSize(const int width, const int height)
         { parameters.viewportWidth = width; parameters.viewportHeight = height; }
 
-    void RotateAroundTarget(float x, float y);
-
 private:
     glm::vec3 position;
     glm::vec3 up;
