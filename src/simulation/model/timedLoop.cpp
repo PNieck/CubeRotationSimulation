@@ -31,7 +31,7 @@ void TimedLoop::Start()
         throw std::runtime_error("TimedLoop already started");
 
     running = true;
-    thread = std::thread(TimedLoop::ThreadFunction, this);
+    thread = std::thread(&TimedLoop::ThreadFunction, this);
 }
 
 
